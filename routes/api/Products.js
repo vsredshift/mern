@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const auth = require('../../middleware/auth')
 
 // Product Model
 const Product = require('../../models/Product')
@@ -17,8 +18,8 @@ router.get('/', (req, res) => {
 
 // @route   POST api/products
 // @desc    Create a product
-// @access  Public
-router.post('/', (req, res) => {
+// @access  Private
+router.post('/', auth, (req, res) => {
     const newProduct = new Product({
         name: req.body.name,
         simNumber: req.body.simNumber
@@ -30,8 +31,8 @@ router.post('/', (req, res) => {
 
 // @route   DELETE api/products/{id}
 // @desc    Delete a product
-// @access  Public
-router.delete('/:id', (req, res) => {
+// @access  Private
+router.delete('/:id', auth, (req, res) => {
     Product.findById(req.params.id)
         .then(product => product.remove().then(() => res.json({success: true})))
         .catch(err => res.status(404).json({success: false}))

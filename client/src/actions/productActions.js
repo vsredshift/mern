@@ -23,7 +23,7 @@ export const addProduct = (product) => dispatch => {
 export const deleteProduct = (id) => dispatch => {
     axios
         .delete(`/api/products/${id}`)
-        .then(res => dispatch({
+        .then(() => dispatch({
             type: DELETE_PRODUCT,
             payload: id
         }))
