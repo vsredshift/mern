@@ -1,12 +1,37 @@
-import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, NavLink, Container } from "reactstrap"
-import { useState } from 'react'
+import { Collapse, Navbar, NavbarToggler, NavbarBrand, Nav, NavItem, Container } from "reactstrap"
+import { Fragment, useState } from 'react'
+import RegisterModal from "./auth/RegisterModal"
+import Logout from './auth/Logout'
+import LoginModal from "./auth/LoginModal"
+import { connect } from "react-redux"
 
-const AppNavbar = ( props ) => {
+const AppNavbar = ( { auth }) => {
 
     const [isOpen, setIsOpen] = useState(false)
     
     const toggle = () => setIsOpen(!isOpen)
 
+    const authLinks = (
+        <Fragment>
+            <NavItem>
+                <span className="navbar-text mr-3"><strong>{auth && auth.user ? `Welcome ${auth.user.name}` : ''}</strong></span>
+            </NavItem>
+            <NavItem>
+                <Logout />
+            </NavItem>
+        </Fragment>
+    )
+
+    const guestLinks = (
+        <Fragment>
+            <NavItem>
+                <RegisterModal />
+            </NavItem>
+            <NavItem>
+                <LoginModal />
+            </NavItem>
+        </Fragment>
+    )
 
     return (
         <div>
@@ -16,11 +41,8 @@ const AppNavbar = ( props ) => {
                     <NavbarToggler onClick={toggle} />
                     <Collapse isOpen={isOpen} navbar>
                         <Nav className="justify-content-end" style={{width: "100%"}} navbar>
-                            <NavItem>
-                                <NavLink href="https://github.com/vsredshift">
-                                    Github
-                                </NavLink>
-                            </NavItem>
+                            {auth && auth.isAuthenticated ? authLinks : guestLinks}
+                                
                         </Nav>
                     </Collapse>
                 </Container>
@@ -29,6 +51,8 @@ const AppNavbar = ( props ) => {
     )
 }
 
+const mapStateToProps = (state) => ({
+    auth: state.auth
+})
 
-
-export default AppNavbar
+export default connect(mapStateToProps, null)(AppNavbar)

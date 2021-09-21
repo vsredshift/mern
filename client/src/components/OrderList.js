@@ -5,7 +5,7 @@ import { connect } from "react-redux"
 import { getProducts, deleteProduct } from "../actions/productActions"  
 
 
-const OrderList = ({ getProducts, product, deleteProduct}) => {
+const OrderList = ({ getProducts, product, deleteProduct, isAuthenticated}) => {
 
 
 
@@ -29,6 +29,7 @@ const OrderList = ({ getProducts, product, deleteProduct}) => {
                         {products.map(({_id, name, simNumber}) => (
                             <CSSTransition key={_id} timeout={500} classNames="fade">
                                 <ListGroupItem>
+                                {isAuthenticated &&
                                     <Button 
                                         className='remove-btn'
                                         color='danger'
@@ -36,6 +37,7 @@ const OrderList = ({ getProducts, product, deleteProduct}) => {
                                         onClick={() => onDelete(_id)}>
                                         &times;
                                     </Button>
+                                }
                                     {name} {simNumber}
                                 </ListGroupItem>
                             </CSSTransition>
@@ -49,7 +51,8 @@ const OrderList = ({ getProducts, product, deleteProduct}) => {
 
 
 const mapStateToProps = (state) => ({
-    product: state.product
+    product: state.product,
+    isAuthenticated: state.auth.isAuthenticated
 })
 
 export default connect(mapStateToProps, { getProducts, deleteProduct })(OrderList)

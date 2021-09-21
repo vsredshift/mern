@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 import { addProduct } from '../actions/productActions'
 
 
-const ProductModal = ({addProduct}) => {
+const ProductModal = ({addProduct, isAuthenticated}) => {
 
     const [modal, setModal] = useState(false)
     const [name, setName] = useState('')
@@ -37,12 +37,14 @@ const ProductModal = ({addProduct}) => {
 
     return (
         <div>
+        {isAuthenticated ?
             <Button 
                 color='dark mt-4'
                 style={{marginBottom: '2rem'}}
                 onClick={toggle}>
                 Add Product
             </Button>
+            : <h4 className="mt-3 ml-4">Please login to manage products</h4>}
             <Modal
                 isOpen={modal}
                 toggle={toggle}>
@@ -53,8 +55,9 @@ const ProductModal = ({addProduct}) => {
                     <Form onSubmit={onSubmit}>
                         <FormGroup>
                             <Label for="product">Product</Label>
-                            <Input className="mt-2 mb-2" type="text" name={name} id="Product" placeholder="Add Order Product" onChange={onChangeName}></Input>
+                            <Input className="mt-2 mb-2" type="text" name={name} id="name" placeholder="Enter product name" onChange={onChangeName}></Input>
                             <Input className="mt-2 mb-2" type="text" name={simNumber} id="sim" placeholder="Enter sim number" onChange={onChangeSim}></Input>
+                            
                             <Button color="dark" style={{marginTop: '2rem', width:'100%'}} block >
                                 Add Product
                             </Button>
@@ -67,7 +70,8 @@ const ProductModal = ({addProduct}) => {
 }
 
 const mapStateToProps = (state) => ({
-    product: state.product
+    product: state.product,
+    isAuthenticated: state.auth.isAuthenticated
 })
 
 export default connect(mapStateToProps, {addProduct})(ProductModal)
